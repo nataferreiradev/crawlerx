@@ -1,5 +1,6 @@
-from interface.db import DatabaseInterface
+from crawler_x.dataBase.interface.db import DatabaseInterface
 from dataclasses import asdict
+import json
 
 ## para o dao funcionar a classe deve ser serializavel!
 
@@ -19,7 +20,8 @@ class GenericDAO:
 
     def insert(self, table: str, obj):
         data = asdict(obj)
-        data = {k: v for k, v in data.items() if v is not None} 
+        # Serializar dicionários para JSON
+        data = {k: (json.dumps(v) if isinstance(v, dict) else v) for k, v in data.items() if v is not None}
         self.db.insert(table, data)
 
     def update(self, table: str, obj, condition: str, params: tuple = ()):

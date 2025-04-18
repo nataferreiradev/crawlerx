@@ -1,24 +1,43 @@
 from crawler_x.api_request import api_object as obj
-from crawler_x.api_request import requester as req
+from crawler_x.api_request import requesterBO as req
 from requests import Response 
+from crawler_x.DAO.dao import GenericDAO as DAO
+from crawler_x.dataBase.sqlite.sqlite import SQLiteDatabase as sqlite
+from crawler_x.dataSaver.dataSaver import DataSaver  as ds
+import crawler_x.dataBase.dataBaseScript as dbScript
+import crawler_x.miscelaneos as miscelaneos
 
 #          █▀▀ █▀█ ▄▀█ █░█░█ █░░ █▀▀ █▀█ ▀▄▀
 #          █▄▄ █▀▄ █▀█ ▀▄▀▄▀ █▄▄ ██▄ █▀▄ █░█
 
-def printLogo():
-    print('\n')
-    print('█▀▀ █▀█ ▄▀█ █░█░█ █░░ █▀▀ █▀█ ▀▄▀')
-    print('█▄▄ █▀▄ █▀█ ▀▄▀▄▀ █▄▄ ██▄ █▀▄ █░█')
-    print('\n')
-    print('█▀ ▀█▀ █░█ █▀▄ █ █▀█   █▀▀ █▀█ █▀█ ▀█▀ █▀▀ ▀▄▀')
-    print('▄█ ░█░ █▄█ █▄▀ █ █▄█   █▄▄ █▄█ █▀▄ ░█░ ██▄ █░█')
 
+def initDataBase():
+    dbPath = f"dataBase/{dbScript.dataBaseName}"
+    dbConnection = sqlite(dbPath)
+    dbConnection.execute(dbScript.apiTableScript)
+    dbConnection.execute(dbScript.scriptTableScript)
+    return dbConnection
 
 def main():
-    api = obj.ApiObject(name='teste', url='https://jsonplaceholder.typicode.com/posts',headers=None,query_params=None)
-    resp: Response = req.requester.makeRequest(api)
-    printLogo()
-    print(resp.json())
+    miscelaneos.printLogo()
+    db = initDataBase();
+    dao = DAO(db)
+
+    api = obj.ApiObject();
+    api.name = "API"
+    api.url = "https://jsonplaceholder.typicode.com/posts"
+    api.params = {"userId": 1}
+    api.headers = {"Content-Type": "application/json"}
+    api.method = "GET"
+
+    dao.insert("apiTable", api);
+
+    requester = req.requester()
+
+    resp: Response = requester.makeRequest(api)
+
+    ds.saveFromResponse(resp, "response", "json");
+    
     return
 
 if __name__ == "__main__":
