@@ -1,4 +1,4 @@
-from crawler_x.dataBase.interface.db import DatabaseInterface
+from crawler_x.integration.dataBase.interface.db import DatabaseInterface
 import sqlite3
 import os
 
@@ -7,7 +7,6 @@ class SQLiteDatabase(DatabaseInterface):
 
     def __new__(cls, db_path="crawler_x.db"):
         if cls._instance is None:
-            # Certifique-se de que o diretório existe
             dir_name = os.path.dirname(db_path)
             if dir_name and not os.path.exists(dir_name):
                 os.makedirs(dir_name)

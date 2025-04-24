@@ -1,7 +1,7 @@
-dataBaseName = "crawler.db"
-dataBasePath = "crawler_x/dataBase/"
+data_base_name = "crawler.db"
+data_base_path = "dataBase/"
 
-apiTableScript = """
+api_table_script = """
     create table if not exists apiTable(
         id integer primary key autoincrement,
         name text not null,
@@ -13,7 +13,7 @@ apiTableScript = """
     )
 """
 
-scriptTableScript = """
+script_table_script = """
     create table if not exists scriptTable(
         id integer primary key autoincrement,
         name text not null,

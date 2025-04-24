@@ -1,5 +1,5 @@
 
-def printLogo():
+def print_logo():
     print('\n')
     print('█▀▀ █▀█ ▄▀█ █░█░█ █░░ █▀▀ █▀█ ▀▄▀')
     print('█▄▄ █▀▄ █▀█ ▀▄▀▄▀ █▄▄ ██▄ █▀▄ █░█')
