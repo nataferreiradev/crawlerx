@@ -11,3 +11,4 @@ class ApiObject:
     headers: dict = None
     body: str = ''  
     params: dict = None
+    return_type: str = 'txt'

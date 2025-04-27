@@ -3,6 +3,8 @@ from crawler_x.modules.api_request.services.requesterBO import RequesterBO
 from requests import Response 
 from crawler_x.integration.DAO.GenericDAO import GenericDAO as DAO
 from crawler_x.integration.dataBase.sqlite.sqlite import SQLiteDatabase as sqlite
+from crawler_x.modules.script_runner.model.script import Script
+from crawler_x.modules.script_runner.service.script_runner import PythonScriptRunner  
 import crawler_x.integration.dataBase.dataBaseScript as dbScript
 import crawler_x.miscelaneos as miscelaneos
 
@@ -15,6 +17,7 @@ def initDataBase():
     db_connection.execute(dbScript.api_table_script)
     db_connection.execute(dbScript.script_table_script)
     db_connection.execute(f'delete from {ApiObject().table_name}')
+    db_connection.execute(f'delete from {Script().table_name}')
     return db_connection
 
 def main():
@@ -54,6 +57,14 @@ def main():
     dao.insert(api2);
     dao.insert(api3);
     dao.insert(api4);
+
+    script = Script();
+    script.name = "script"
+    script.path = "scripts/teste.py"
+    dao.insert(script)
+
+    script_runner = PythonScriptRunner()
+    script_runner.run(script)
 
     requesterBO = RequesterBO()
 
