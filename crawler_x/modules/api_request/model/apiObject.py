@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass,field
 
 @dataclass
 class ApiObject:
@@ -8,7 +8,7 @@ class ApiObject:
     name: str = ''
     url: str = ''
     method: str = ''
-    headers: dict = None
-    body: str = ''  
-    params: dict = None
+    headers: dict = field(default_factory=dict, metadata={"json": True})
+    body: str = ''
+    params: dict = field(default_factory=dict, metadata={"json": True})
     return_type: str = 'txt'
