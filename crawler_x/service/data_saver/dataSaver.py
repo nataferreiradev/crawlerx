@@ -23,7 +23,11 @@ class DataSaver():
         os.makedirs(dir_path, exist_ok=True) 
         return dir_path
 
-    def getFilePath(self,name: str, extension: str):
-        dir_path = self.getDir() 
-        file_path = os.path.join(dir_path, f'{name}-{datetime.now().time()}.{extension}')
+    def getFilePath(self, name: str, extension: str):
+        dir_path = self.getDir()
+        date = datetime.now().time()
+        
+        date_str = date.strftime('%H-%M-%S')  # Formato seguro para nomes de arquivos
+        
+        file_path = os.path.join(dir_path, f'{name}-{date_str}.{extension}')
         return file_path
