@@ -1,14 +1,18 @@
-from dataclasses import dataclass,field
+## objetos com sqlalchmy são declarados com a classe Base para o uso do orm
 
-@dataclass
-class ApiObject:
-    table_name = 'apiTable'
+from sqlalchemy import Column, Integer, String, JSON
+from sqlalchemy.ext.declarative import declarative_base
 
-    id: int = None
-    name: str = ''
-    url: str = ''
-    method: str = ''
-    headers: dict = field(default_factory=dict, metadata={"json": True})
-    body: str = ''
-    params: dict = field(default_factory=dict, metadata={"json": True})
-    return_type: str = 'txt'
+Base = declarative_base()
+
+class ApiObject(Base):
+    __tablename__ = 'apiTable'
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255))
+    url = Column(String(255))
+    method = Column(String(10))
+    headers = Column(JSON)
+    body = Column(String)
+    params = Column(JSON)
+    return_type = Column(String(10))

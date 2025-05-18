@@ -2,7 +2,7 @@ import requests as req
 from ..model.apiObject import ApiObject
 from crawler_x.service.data_saver.dataSaver import DataSaver
 
-class RequesterBO():
+class Requester():
     def __init__(self):
         self.data_saver = DataSaver()
 

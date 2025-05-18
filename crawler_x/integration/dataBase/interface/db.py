@@ -7,7 +7,7 @@ class DatabaseInterface(ABC):
         pass
 
     @abstractmethod
-    def insert(self, table: str, data: dict):
+    def insert(self, table: str, data: dict) -> int:
         pass
 
     @abstractmethod

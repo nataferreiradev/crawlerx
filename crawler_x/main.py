@@ -1,7 +1,7 @@
 from crawler_x.modules.api_request.model.apiObject import ApiObject 
-from crawler_x.modules.api_request.services.requesterBO import RequesterBO 
+from crawler_x.modules.api_request.services.requester import Requester
 from requests import Response 
-from crawler_x.integration.DAO.GenericDAO import GenericDAO as DAO
+from crawler_x.integration.DAO.DAO import GenericORM as ORM
 from crawler_x.integration.dataBase.sqlite.sqlite import SQLiteDatabase as sqlite
 from crawler_x.modules.script_runner.model.script import Script
 from crawler_x.modules.script_runner.service.script_runner import PythonScriptRunner  
@@ -23,7 +23,7 @@ def initDataBase():
 def main():
     miscelaneos.print_logo()
     db = initDataBase();
-    dao = DAO(db)
+    dao = ORM(db)
 
     api = ApiObject();
     api.name = "API"
@@ -66,14 +66,14 @@ def main():
     script_runner = PythonScriptRunner()
     script_runner.run(script)
 
-    requesterBO = RequesterBO()
+    requester = Requester()
 
     saved_apis: list = dao.list_all(ApiObject);
 
     print('--'* 20);
 
     for saved_api in saved_apis:
-        resp: Response = requesterBO.make_request(saved_api)
+        resp: Response = requester.make_request(saved_api)
         print('\n')
         print(resp.json());
 
