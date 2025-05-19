@@ -1,10 +1,12 @@
-from dataclasses import dataclass
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
 
-@dataclass
-class Script:
-    table_name = 'scriptTable'
+Base = declarative_base()
 
-    id: int = None
-    name: str = ''
-    path: str = ''
-    return_type: str = 'txt'
+class Script(Base):
+    __tablename__ = 'scriptTable'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    path = Column(String, nullable=False)
+    return_type = Column(String, default='txt')
