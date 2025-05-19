@@ -7,16 +7,16 @@ class CadastrarApi():
     def __init__(self,session: Session):
         self.repository = ApiRepository(ApiDAO(session))
 
-    def execute(self, api: ApiObject) -> ApiObject:
-        if not api:
+    def execute(self, api_object: ApiObject) -> ApiObject:
+        if not api_object:
             raise ValueError("objeto api não pode ser nulo")
-        if api.name is None or api.name == "":
+        if api_object.name is None or api_object.name == "":
             raise ValueError("Nome da API não pode ser nulo ou vazio")
-        if api.url is None or api.url == "":
+        if api_object.url is None or api_object.url == "":
             raise ValueError("URL da API não pode ser nulo ou vazio")
-        if api.method is None or api.method == "":
+        if api_object.method is None or api_object.method == "":
             raise ValueError("Método da API não pode ser nulo ou vazio")
         try:
-            return self.repository.insert(api)
+             return self.repository.save(api_object) 
         except Exception as e:
             raise Exception(f"Erro ao cadastrar a API: {str(e)}")

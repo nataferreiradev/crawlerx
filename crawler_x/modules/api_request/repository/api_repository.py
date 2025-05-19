@@ -6,7 +6,8 @@ class ApiRepository():
         self.dao = dao
 
     def save(self, api_object: ApiObject) -> ApiObject: 
-        return self.dao.save(api_object)
+        self.dao.add(api_object)
+        return api_object
     
     def get(self, api_object_id: int) -> ApiObject:
         return self.dao.get(api_object_id)
@@ -14,7 +15,7 @@ class ApiRepository():
     def delete(self, api_object_id: int) -> None:
         self.dao.delete(api_object_id)
     
-    def udpate(self, api_object: ApiObject) -> None:
+    def update(self, api_object: ApiObject) -> None:
         self.dao.update(api_object)
     
     def get_all(self) -> list[ApiObject]:
