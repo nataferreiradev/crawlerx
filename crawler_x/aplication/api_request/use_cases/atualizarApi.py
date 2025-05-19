@@ -17,6 +17,6 @@ class AtualizarApi():
         if api.method is None or api.method == "":
             raise ValueError("Método da API não pode ser nulo ou vazio")
         try:
-            return self.repository.udpate(api)
+            return self.repository.update(api)
         except Exception as e:
             raise Exception(f"Erro ao atualizar a API: {str(e)}")
