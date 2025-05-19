@@ -1,7 +1,7 @@
 from crawler_x.modules.script_runner.integration.scriptDao import ScriptDAO
 from crawler_x.modules.script_runner.model.script import Script
 
-class ApiRepository():
+class ScriptRepository():
     def __init__(self, dao: ScriptDAO):
         self.dao = dao
 
