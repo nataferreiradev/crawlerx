@@ -233,8 +233,8 @@ def update_script(id: int, script_data: ScriptJsonObject, db: Session = Depends(
             content={"detail": str(e)}
         )
 
-@router.post("/api")
-def criar_api(script_data: ScriptJsonObject, db: Session = Depends(get_db)):
+@router.post("/script")
+def criar_script(script_data: ScriptJsonObject, db: Session = Depends(get_db)):
     if not script_data:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
