@@ -3,7 +3,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional, Dict
 
-class ApiJsonData(BaseModel):
+class ApiJsonObject(BaseModel):
     id: Optional[int] = None
     name: str = Field(..., max_length=255)
     url: str = Field(..., max_length=255)

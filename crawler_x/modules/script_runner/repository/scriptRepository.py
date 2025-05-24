@@ -1,5 +1,5 @@
 from crawler_x.modules.script_runner.integration.scriptDao import ScriptDAO
-from crawler_x.modules.script_runner.model.script import Script
+from crawler_x.modules.script_runner.model.scriptOrmObject import Script
 
 class ScriptRepository():
     def __init__(self, dao: ScriptDAO):

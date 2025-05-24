@@ -1,11 +1,11 @@
-from crawler_x.modules.api_request.model.apiObject import ApiObject
-from crawler_x.modules.script_runner.model.script import Script
+from crawler_x.modules.api_request.model.apiOrmObject import ApiOrmObject
+from crawler_x.modules.script_runner.model.scriptOrmObject import Script
 
 data_base_name = "crawler.db"
 data_base_path = "dataBase/"
 
 api_table_script = f"""
-    create table if not exists {ApiObject.table_name} (
+    create table if not exists {ApiOrmObject.table_name} (
         id integer primary key autoincrement,
         name text not null,
         url text not null,

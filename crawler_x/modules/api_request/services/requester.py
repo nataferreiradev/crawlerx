@@ -1,12 +1,12 @@
 import requests as req
-from ..model.apiObject import ApiObject
+from ..model.apiOrmObject import ApiOrmObject
 from crawler_x.service.data_saver.dataSaver import DataSaver
 
 class Requester():
     def __init__(self):
         self.data_saver = DataSaver()
 
-    def make_request(self,api_object: ApiObject) -> req.Response:
+    def make_request(self,api_object: ApiOrmObject) -> req.Response:
         resp: req.Response;
         method = api_object.method.upper().strip()
         if method == "":
@@ -25,11 +25,11 @@ class Requester():
 
 
 
-    def get(self, api_object: ApiObject):
+    def get(self, api_object: ApiOrmObject):
         return req.get(url=api_object.url, headers=api_object.headers, params=api_object.params)
 
-    def post(self, api_object: ApiObject):
+    def post(self, api_object: ApiOrmObject):
         return req.post(url=api_object.url, headers=api_object.headers, params=api_object.params)
 
-    def put(self, api_object: ApiObject):
+    def put(self, api_object: ApiOrmObject):
         return req.put(url=api_object.url, headers=api_object.headers, params=api_object.params)

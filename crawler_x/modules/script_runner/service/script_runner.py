@@ -1,4 +1,4 @@
-from crawler_x.modules.script_runner.model.script import Script
+from crawler_x.modules.script_runner.model.scriptOrmObject import Script
 from crawler_x.service.data_saver.dataSaver import DataSaver
 
 class PythonScriptRunner:

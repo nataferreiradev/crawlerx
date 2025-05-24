@@ -1,5 +1,5 @@
 import os
-from crawler_x.modules.api_request.model.apiObject import ApiObject
+from crawler_x.modules.api_request.model.apiOrmObject import ApiOrmObject
 from requests import Response
 from datetime import datetime
 
@@ -7,7 +7,7 @@ from datetime import datetime
 class DataSaver():
     dirName = 'data'
 
-    def save_from_response(self, resp: Response, ApiObject: ApiObject):
+    def save_from_response(self, resp: Response, ApiObject: ApiOrmObject):
         extension = 'json' if resp.headers.get('Content-Type') == 'application/json' else ApiObject.return_type
         self.save(ApiObject.name, resp.content, extension)
     

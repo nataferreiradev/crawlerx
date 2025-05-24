@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 
-class ScriptJsonData(BaseModel):
+class ScriptJsonObject(BaseModel):
     id: Optional[int] = None
     name: str = Field(..., max_length=255)
     url: str = Field(..., max_length=255)

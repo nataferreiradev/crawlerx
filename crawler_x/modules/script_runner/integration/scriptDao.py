@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from typing import Optional, List
-from crawler_x.integration.DAO.DAO import DAO 
-from crawler_x.modules.script_runner.model.script import Script
+from crawler_x.infrastructure.DAO.DAO import DAO 
+from crawler_x.modules.script_runner.model.scriptOrmObject import Script
 
 class ScriptDAO(DAO):
     def __init__(self, session: Session):

@@ -4,10 +4,10 @@ from sqlalchemy.orm import Session
 from crawler_x.aplication.api_request.use_cases import (
     ListarApi, ProcurarApi, CadastrarApi, DeletarApi, AtualizarApi
 )
-from crawler_x.aplication.script_runner.use_cases import ( ProcurarScript,listarScripts)
+from crawler_x.aplication.script_runner.use_cases import ( ProcurarScript,ListarScripts,GetScriptFile)
 from crawler_x.aplication.data_recover.use_cases import PegarDiretorioZippado
-from crawler_x.integration.dataBase.sqlalchemy_session import get_db
-from crawler_x.modules.api_request.model import ApiObject, ApiJsonData
+from crawler_x.infrastructure.dataBase.sqlalchemy_session import get_db
+from crawler_x.modules.api_request.model import ApiOrmObject, ApiJsonObject
 from pathlib import Path
 
 router = APIRouter()
@@ -64,13 +64,13 @@ def listar_apis(db: Session = Depends(get_db)):
         )
 
 @router.post("/api")
-def criar_api(api_data: ApiJsonData, db: Session = Depends(get_db)):
+def criar_api(api_data: ApiJsonObject, db: Session = Depends(get_db)):
     if not api_data:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
             content={"detail": "Dados da API não podem ser nulos"}
         )
-    new_api = ApiObject(
+    new_api = ApiOrmObject(
         name=api_data.name,
         url=api_data.url,
         method=api_data.method,
@@ -98,7 +98,7 @@ def criar_api(api_data: ApiJsonData, db: Session = Depends(get_db)):
         )
 
 @router.put("/api/{id}")
-def update_api(id: int, api_data: ApiJsonData, db: Session = Depends(get_db)):
+def update_api(id: int, api_data: ApiJsonObject, db: Session = Depends(get_db)):
     if id <= 0:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -109,7 +109,7 @@ def update_api(id: int, api_data: ApiJsonData, db: Session = Depends(get_db)):
             status_code=status.HTTP_400_BAD_REQUEST,
             content={"detail": "Dados da API não podem ser nulos"}
         )
-    api = ApiObject(
+    api = ApiOrmObject(
         id=api_data.id,
         name=api_data.name,
         url=api_data.url,
@@ -198,8 +198,47 @@ def get_script_por_id(id: int, db: Session = Depends(get_db)):
 @router.get("/script")
 def get_listar_scripts(db: Session = Depends(get_db)):
     try:
-        use_case = listarScripts(db)
+        use_case = ListarScripts(db)
         return use_case.execute()
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"detail": str(e)}
+        )
+
+@router.get("/script/file/{id}")
+def get_script_file(id: int, db: Session = Depends(get_db)):
+    if id <= 0:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": "ID deve ser maior que zero"}
+        )
+    try:
+        use_case = GetScriptFile(db)
+        result = use_case.execute(id)
+        if not result:
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content={"detail": "Arquivo não encontrado"}
+            )
+
+        file_path = Path(result)
+        if not file_path.exists():
+            return JSONResponse(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                content={"detail": "Falha ao localizar o arquivo no sistema de arquivos"}
+            )
+
+        return FileResponse(
+            path=file_path,
+            media_type="text/x-python",
+            filename=file_path.name
+        )
+    except FileNotFoundError as e:
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={"detail": str(e)}
+        )
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
