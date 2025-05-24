@@ -4,7 +4,9 @@ from sqlalchemy.orm import Session
 from crawler_x.aplication.api_request.use_cases import (
     ListarApi, ProcurarApi, CadastrarApi, DeletarApi, AtualizarApi
 )
-from crawler_x.aplication.script_runner.use_cases import ( ProcurarScript,ListarScripts,GetScriptFile)
+from crawler_x.aplication.script_runner.use_cases import ( 
+    ProcurarScript,ListarScripts,GetScriptFile,DeleteScript
+)
 from crawler_x.aplication.data_recover.use_cases import PegarDiretorioZippado
 from crawler_x.infrastructure.dataBase.sqlalchemy_session import get_db
 from crawler_x.modules.api_request.model import ApiOrmObject, ApiJsonObject
@@ -200,6 +202,26 @@ def get_listar_scripts(db: Session = Depends(get_db)):
     try:
         use_case = ListarScripts(db)
         return use_case.execute()
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"detail": str(e)}
+        )
+
+@router.delete("/script/{id}")
+def get_listar_scripts(id: int,db: Session = Depends(get_db)):
+    if id <= 0:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": "ID deve ser maior que zero"}
+        )
+    try:
+        use_case = DeleteScript(db)
+        use_case.execute(id) 
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={"message": "Script deletado com sucesso"}
+        )
     except Exception as e:
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

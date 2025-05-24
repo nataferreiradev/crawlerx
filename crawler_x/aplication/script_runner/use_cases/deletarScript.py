@@ -1,14 +1,19 @@
+from crawler_x.modules.script_runner.repository.scriptRepository import ScriptRepository 
+from crawler_x.modules.script_runner.integration.scriptDao import ScriptDAO 
 from crawler_x.aplication.script_runner.use_cases.procurarScript import ProcurarScript
 from crawler_x.modules.script_runner.service.script_manager import ScriptManager
 from sqlalchemy.orm import Session
 
-class GetScriptFile():
+class DeleteScript():
     def __init__(self, session: Session):
         self.procurar_script = ProcurarScript(session)
+        self.directory = ScriptRepository(ScriptDAO(session))
 
     def execute(self, id: int):
         script = self.procurar_script.execute(id)
         if not script:
-            return None
+            raise Exception("Script não encontrado")
         script_recover = ScriptManager()
-        return script_recover.get_file_path(script.path);
+        if script_recover.delete_file(script.path):
+            self.directory.delete(script.id)
+        
