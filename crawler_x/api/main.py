@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from crawler_x.api.routes import router as api_router
+from crawler_x.api.routes.router import router
 
 app = FastAPI(
     title="Projeto X API",
@@ -16,7 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(api_router, prefix="/v1")
+app.include_router(router, prefix="/v1")
 
 
 # a estrutura ficou da seguinte forma:
