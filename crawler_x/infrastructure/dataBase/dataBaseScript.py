@@ -1,5 +1,5 @@
 from crawler_x.modules.api_request.model.apiOrmObject import ApiOrmObject
-from crawler_x.modules.script_runner.model.scriptOrmObject import Script
+from crawler_x.modules.script_runner.model.scriptOrmObject import ScriptOrmObject
 
 data_base_name = "crawler.db"
 data_base_path = "dataBase/"
@@ -18,7 +18,7 @@ api_table_script = f"""
 """
 
 script_table_script = f"""
-    create table if not exists {Script.table_name}(
+    create table if not exists {ScriptOrmObject.table_name}(
         id integer primary key autoincrement,
         name text not null,
         path text not null,

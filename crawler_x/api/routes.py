@@ -1,26 +1,30 @@
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 from sqlalchemy.orm import Session
 from crawler_x.aplication.api_request.use_cases import (
     ListarApi, ProcurarApi, CadastrarApi, DeletarApi, AtualizarApi
 )
 from crawler_x.aplication.script_runner.use_cases import ( 
-    ProcurarScript,ListarScripts,GetScriptFile,DeleteScript
+    ProcurarScript, ListarScripts, GetScriptFile, DeleteScript, AlterarScript, SalvarScript
 )
 from crawler_x.aplication.data_recover.use_cases import PegarDiretorioZippado
 from crawler_x.infrastructure.dataBase.sqlalchemy_session import get_db
 from crawler_x.modules.api_request.model import ApiOrmObject, ApiJsonObject
+from crawler_x.modules.script_runner.model import ScriptJsonObject, ScriptOrmObject
 from pathlib import Path
 
 router = APIRouter()
 
+def validate_id(id: int):
+    if id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="ID deve ser maior que zero"
+        )
+
 @router.get("/api/{id}")
 def get_api_por_id(id: int, db: Session = Depends(get_db)):
-    if id <= 0:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"detail": "ID deve ser maior que zero"}
-        )
+    validate_id(id)
     try:
         use_case = ProcurarApi(db)
         result = use_case.execute(id)
@@ -38,11 +42,7 @@ def get_api_por_id(id: int, db: Session = Depends(get_db)):
 
 @router.delete("/api/{id}")
 def delete_api_por_id(id: int, db: Session = Depends(get_db)):
-    if id <= 0:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"detail": "ID deve ser maior que zero"}
-        )
+    validate_id(id)
     try:
         use_case = DeletarApi(db)
         use_case.execute(id)
@@ -101,15 +101,11 @@ def criar_api(api_data: ApiJsonObject, db: Session = Depends(get_db)):
 
 @router.put("/api/{id}")
 def update_api(id: int, api_data: ApiJsonObject, db: Session = Depends(get_db)):
-    if id <= 0:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"detail": "ID deve ser maior que zero"}
-        )
+    validate_id(id)
     if not api_data:
-        return JSONResponse(
+        raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            content={"detail": "Dados da API não podem ser nulos"}
+            detail="Dados da API não podem ser nulos"
         )
     api = ApiOrmObject(
         id=api_data.id,
@@ -177,11 +173,7 @@ def download_zip(folder_name: str):
 
 @router.get("/script/{id}")
 def get_script_por_id(id: int, db: Session = Depends(get_db)):
-    if id <= 0:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"detail": "ID deve ser maior que zero"}
-        )
+    validate_id(id)
     try:
         use_case = ProcurarScript(db)
         result = use_case.execute(id)
@@ -208,13 +200,71 @@ def get_listar_scripts(db: Session = Depends(get_db)):
             content={"detail": str(e)}
         )
 
-@router.delete("/script/{id}")
-def get_listar_scripts(id: int,db: Session = Depends(get_db)):
-    if id <= 0:
+@router.put("/script/{id}")
+def update_script(id: int, script_data: ScriptJsonObject, db: Session = Depends(get_db)):
+    validate_id(id)
+    if not script_data:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Dados do Script não podem ser nulos"
+        )
+    script = ScriptOrmObject(
+        id=script_data.id,
+        name=script_data.name,
+        return_type=script_data.return_type
+    )
+    if id != script_data.id:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
-            content={"detail": "ID deve ser maior que zero"}
+            content={"detail": "ID na URL não corresponde ao ID do objeto enviado"}
         )
+    use_case = AlterarScript(db)
+    try:
+        use_case.execute(script)
+        return {"message": "Script atualizada com sucesso"}
+    except ValueError as e:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": str(e)}
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"detail": str(e)}
+        )
+
+@router.post("/api")
+def criar_api(script_data: ScriptJsonObject, db: Session = Depends(get_db)):
+    if not script_data:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": "Dados do Script não podem ser nulos"}
+        )
+    new_script = ApiOrmObject(
+        name=script_data.name,
+        return_type=script_data.return_type
+    )
+    use_case = SalvarScript(db)
+    try:
+        new_script = use_case.execute(new_script)
+        return JSONResponse(
+            status_code=status.HTTP_201_CREATED,
+            content={"message": "Script criada com sucesso", "id": new_script.id}
+        )
+    except ValueError as e:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": str(e)}
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"detail": str(e)}
+        )
+
+@router.delete("/script/{id}")
+def delete_script(id: int, db: Session = Depends(get_db)):
+    validate_id(id)
     try:
         use_case = DeleteScript(db)
         use_case.execute(id) 
@@ -230,11 +280,7 @@ def get_listar_scripts(id: int,db: Session = Depends(get_db)):
 
 @router.get("/script/file/{id}")
 def get_script_file(id: int, db: Session = Depends(get_db)):
-    if id <= 0:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"detail": "ID deve ser maior que zero"}
-        )
+    validate_id(id)
     try:
         use_case = GetScriptFile(db)
         result = use_case.execute(id)

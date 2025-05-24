@@ -1,8 +1,8 @@
-from crawler_x.modules.script_runner.model.scriptOrmObject import Script
+from crawler_x.modules.script_runner.model.scriptOrmObject import ScriptOrmObject
 from crawler_x.service.data_saver.dataSaver import DataSaver
 
 class PythonScriptRunner:
-    def run(self,script: Script):
+    def run(self,script: ScriptOrmObject):
         context = {}
 
         with open(script.path, 'r', encoding='utf-8') as file:
@@ -24,7 +24,7 @@ class PythonScriptRunner:
         if data is not None:
             self.saveResult(data,script)
     
-    def saveResult(self,data,script: Script):
+    def saveResult(self,data,script: ScriptOrmObject):
         dataSaver = DataSaver()
 
         dataSaver.save(script.name, data, 'json')
