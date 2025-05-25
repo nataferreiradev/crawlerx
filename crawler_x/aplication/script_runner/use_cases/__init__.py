@@ -4,6 +4,7 @@ from .getScriptFile import GetScriptFile
 from .deletarScript import DeleteScript
 from .alterarScript import AlterarScript
 from .salvarScript import SalvarScript 
+from .salvarFileScript import SalvarFileScript
 
 __all__ = [
     "ProcurarScript",
@@ -11,5 +12,6 @@ __all__ = [
     "GetScriptFile",
     "DeleteScript",
     "AlterarScript",
-    "SalvarScript"
+    "SalvarScript",
+    "SalvarFileScript"
 ]

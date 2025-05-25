@@ -21,3 +21,13 @@ class ScriptManager():
             return True
         else:
             raise FileNotFoundError("File not found")
+    
+    def save_file(self,file_name:str, file_content: bytes) -> bool:
+        full_path = self.data_dir / "script" / file_name+ ".py" 
+
+        if not full_path.parent.exists():
+            full_path.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(full_path, 'wb') as file:
+            file.write(file_content)
+        return "script" / file_name+ ".py"

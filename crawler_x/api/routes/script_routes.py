@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status,File, UploadFile
 from fastapi.responses import JSONResponse, FileResponse
 from sqlalchemy.orm import Session
 from pathlib import Path
 from crawler_x.aplication.script_runner.use_cases import (
-    ProcurarScript, ListarScripts, GetScriptFile, DeleteScript, AlterarScript, SalvarScript
+    ProcurarScript, ListarScripts, GetScriptFile, DeleteScript, AlterarScript, SalvarScript,
+    SalvarFileScript,
 )
 from crawler_x.infrastructure.dataBase.sqlalchemy_session import get_db
 from crawler_x.modules.script_runner.model import ScriptJsonObject, ScriptOrmObject
@@ -158,3 +159,29 @@ def get_script_file(id: int, db: Session = Depends(get_db)):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={"detail": str(e)}
         )
+
+@router.post("/file/{id}")
+def post_script_file(id: int,file: UploadFile = File(...), db: Session = Depends(get_db)):
+    validate_id(id)
+    if not file.filename.endswith(".py"):
+        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST , detail="Apenas arquivos .py são permitidos.")
+    
+    try:
+        use_case = SalvarFileScript(db)
+        use_case.execute(file, id)
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={"message": "Arquivo salvo com sucesso"}
+        )
+    except ValueError as e:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": str(e)}
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"detail": str(e)}
+        )
+
+
