@@ -1,6 +1,6 @@
 requests==2.31.0
 fastapi
-uvicorn
+uvicorn[standard]
 python-multipart
 sqlalchemy
 pydantic

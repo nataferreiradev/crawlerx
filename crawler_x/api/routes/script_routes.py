@@ -212,5 +212,3 @@ def post_script_file(id: int,file: UploadFile = File(...), db: Session = Depends
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={"detail": str(e)}
         )
-
-

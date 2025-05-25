@@ -4,8 +4,8 @@ from crawler_x.api.routes.router import router
 
 app = FastAPI(
     title="Projeto X API",
-    description="APIs para orquestração de serviços do Projeto X",
-    version="0.1.0"
+    description="APIs para orquestração de serviços do crawler X",
+    version="1.0.0"
 )
 
 app.add_middleware(
