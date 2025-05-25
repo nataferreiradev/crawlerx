@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from pathlib import Path
 from crawler_x.aplication.script_runner.use_cases import (
     ProcurarScript, ListarScripts, GetScriptFile, DeleteScript, AlterarScript, SalvarScript,
-    SalvarFileScript,
+    SalvarFileScript,AlterarFileScript
 )
 from crawler_x.infrastructure.dataBase.sqlalchemy_session import get_db
 from crawler_x.modules.script_runner.model import ScriptJsonObject, ScriptOrmObject
@@ -16,6 +16,13 @@ def validate_id(id: int):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="ID deve ser maior que zero"
+        )
+
+def validate_file_extension(file: UploadFile):
+    if not file.filename.endswith(".py"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Apenas arquivos .py são permitidos"
         )
 
 @router.get("/{id}")
@@ -160,11 +167,33 @@ def get_script_file(id: int, db: Session = Depends(get_db)):
             content={"detail": str(e)}
         )
 
+@router.put("/file/{id}")
+def update_script_file(id: int,file: UploadFile = File(...), db: Session = Depends(get_db)):
+    validate_id(id)
+    validate_file_extension(file)
+    
+    try:
+        use_case = AlterarFileScript(db)
+        use_case.execute(file, id)
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={"message": "Arquivo alterado com sucesso"}
+        )
+    except ValueError as e:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": str(e)}
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"detail": str(e)}
+        )
+
 @router.post("/file/{id}")
 def post_script_file(id: int,file: UploadFile = File(...), db: Session = Depends(get_db)):
     validate_id(id)
-    if not file.filename.endswith(".py"):
-        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST , detail="Apenas arquivos .py são permitidos.")
+    validate_file_extension(file)
     
     try:
         use_case = SalvarFileScript(db)

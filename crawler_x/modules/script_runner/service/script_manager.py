@@ -31,3 +31,13 @@ class ScriptManager():
         with open(full_path, 'wb') as file:
             file.write(file_content)
         return "script" / file_name+ ".py"
+
+    def recreate_file(self, script_path: str, file_content: bytes) -> bool:
+        full_path = self.data_dir / script_path
+
+        if full_path.exists() and full_path.is_file():
+            with open(full_path, 'wb') as file:
+                file.write(file_content)
+            return True
+        else:
+            raise FileNotFoundError("File not found")

@@ -4,7 +4,7 @@ from .alterarScript import AlterarScript
 from sqlalchemy.orm import Session
 from fastapi import UploadFile
 
-class SalvarFileScript:
+class AlterarFileScript:
     def __init__(self, session: Session):
         self.procurar_script = ProcurarScript(session)
         self.script_manager = ScriptManager()
@@ -15,8 +15,8 @@ class SalvarFileScript:
         if not script:
             raise ValueError("Script não encontrado")
         
-        if self.script_manager.get_file_path(script.path):
-            raise Exception("script já possui um arquivo associado")
+        if not self.script_manager.get_file_path(script.path):
+            raise Exception("script não possui um arquivo associado crie um novo arquivo")
         
         new_path = self.script_manager.save_file(script.nam, file.file.read())
 
