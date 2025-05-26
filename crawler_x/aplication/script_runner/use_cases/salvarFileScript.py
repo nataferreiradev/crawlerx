@@ -15,12 +15,11 @@ class SalvarFileScript:
         if not script:
             raise ValueError("Script não encontrado")
         
-        if self.script_manager.get_file_path(script.path):
-            raise Exception("script já possui um arquivo associado")
+        if script.path and script.path.strip() and self.script_manager.get_file_path(script.path):
+            raise Exception("Script já possui um arquivo associado")
         
-        new_path = self.script_manager.save_file(script.nam, file.file.read())
+        new_path = self.script_manager.save_file(script.name, file.file.read())
 
         script.path = new_path
 
         return self.alterar_script.execute(script)
-        

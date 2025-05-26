@@ -18,7 +18,7 @@ class AlterarFileScript:
         if not self.script_manager.get_file_path(script.path):
             raise Exception("script não possui um arquivo associado crie um novo arquivo")
         
-        new_path = self.script_manager.save_file(script.nam, file.file.read())
+        new_path = self.script_manager.save_file(script.name, file.file.read())
 
         script.path = new_path
 
