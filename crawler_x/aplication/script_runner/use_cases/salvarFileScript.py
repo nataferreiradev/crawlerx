@@ -18,8 +18,8 @@ class SalvarFileScript:
         if not script:
             raise ValueError("Script não encontrado")
         
-        if script.path and self.script_manager.get_file_path(script.path):
-            raise Exception("O script não possui um arquivo associado. Crie um novo arquivo.")
+        if script.path and script.path.strip() and self.script_manager.get_file_path(script.path):
+            raise Exception("Script já possui um arquivo associado")
 
         if not self.script_manager.search_in_file_for_result_var(file_content):
             raise ValueError("O arquivo deve conter a variável 'result'.")
@@ -28,8 +28,6 @@ class SalvarFileScript:
         if not new_path:
             raise ValueError("Erro ao salvar o arquivo.")
 
-
         script.path = new_path
 
         return self.alterar_script.execute(script)
-        

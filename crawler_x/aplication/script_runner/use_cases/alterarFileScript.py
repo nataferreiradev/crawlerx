@@ -21,6 +21,7 @@ class AlterarFileScript:
         if not self.script_manager.get_file_path(script.path):
             raise Exception("script não possui um arquivo associado crie um novo arquivo")
         
+
         if not self.script_manager.search_in_file_for_result_var(file_content):
             raise ValueError("O arquivo deve conter a variável 'result'.")
         

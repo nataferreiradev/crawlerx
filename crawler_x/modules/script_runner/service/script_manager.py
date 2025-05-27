@@ -6,8 +6,8 @@ class ScriptManager():
     def __init__(self):
         self.data_dir = Path.cwd()
 
+    def get_file_path(self, script_path: str) -> Path | None:
 
-    def get_file_path(self, script_path: str) -> Path:
         full_path = self.data_dir / script_path
 
         if full_path.exists() and full_path.is_file():
@@ -24,7 +24,7 @@ class ScriptManager():
         else:
             raise FileNotFoundError("File not found")
     
-    def save_file(self,file_name:str, file_content: bytes) -> bool:
+    def save_file(self,file_name:str, file_content: bytes):
         if not file_name:
             raise ValueError("O nome do arquivo não pode ser vazio ou None.")
 
@@ -43,7 +43,6 @@ class ScriptManager():
             file.write(file_content)
         return Path(scripts_dir) / f"{file_name}.py"
 
-
     def recreate_file(self, script_path: str, file_content: bytes) -> bool:
         full_path = self.data_dir / script_path
         print(full_path)
@@ -60,4 +59,3 @@ class ScriptManager():
     def search_in_file_for_result_var(self, file_content: str) -> bool:
         result = "result" in file_content
         return result
-
