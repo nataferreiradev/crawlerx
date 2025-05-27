@@ -16,6 +16,12 @@ class AtualizarApi():
             raise ValueError("URL da API não pode ser nulo ou vazio")
         if api.method is None or api.method == "":
             raise ValueError("Método da API não pode ser nulo ou vazio")
+        api.method = api.method.upper()
+        if api.method not in ["GET", "POST", "PUT"]:
+            ValueError("Método da API deve ser 'GET', 'POST' ou 'PUT'")
+        if api.return_type is None or api.return_type == "":
+            raise ValueError("Tipo de retorno da API não pode ser nulo ou vazio")
+        api.return_type = api.return_type.lower()
         try:
             return self.repository.update(api)
         except Exception as e:

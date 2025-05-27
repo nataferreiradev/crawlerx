@@ -24,6 +24,12 @@ class CrawlerManager:
         
         for script in scripts:
             total_executatos += 1
+            print(f"Executando script: {script.name}")
+            print(f"Script path: {script.path}")
+            if not script.path or script.path == "":
+                registerCallback(self.get_json_massage(total_executions, total_executatos, f"Script {script.name} não possui um arquivo associado"))
+                continue
+
             try:
                 self.script_runner.run(script)
                 registerCallback(self.get_json_massage(total_executions, total_executatos, f"script {script.name} executado com sucesso"))

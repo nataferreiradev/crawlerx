@@ -1,7 +1,10 @@
 from crawler_x.modules.script_runner.model.scriptOrmObject import ScriptOrmObject
 from crawler_x.service.data_saver.dataSaver import DataSaver
 
+scripts_dir = 'scripts'
+    
 class PythonScriptRunner:
+
     def run(self,script: ScriptOrmObject):
         context = {}
 
