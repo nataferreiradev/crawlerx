@@ -14,4 +14,5 @@ class SalvarScript():
             raise ValueError("Tipo de retorno não encontrado")
         if script.name == "" or script.name is None:
             raise ValueError("Nome do script não encontrado")
+        script.return_type = script.return_type.lower()
         return self.script_repository.save(script)

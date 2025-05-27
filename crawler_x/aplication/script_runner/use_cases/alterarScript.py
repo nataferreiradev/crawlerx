@@ -10,8 +10,13 @@ class AlterarScript():
     def execute(self, script: ScriptOrmObject) -> ScriptOrmObject:
         if not script:
             raise ValueError("Script não encontrado")
+            
         if script.return_type == "" or script.return_type is None:
             raise ValueError("Tipo de retorno não encontrado")
+
         if script.name == "" or script.name is None:
             raise ValueError("Nome do script não encontrado")
+
+        script.return_type = script.return_type.lower()
+
         return self.script_repository.update(script)

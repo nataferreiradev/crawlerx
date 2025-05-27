@@ -16,8 +16,12 @@ class CadastrarApi():
             raise ValueError("URL da API não pode ser nulo ou vazio")
         if api_object.method is None or api_object.method == "":
             raise ValueError("Método da API não pode ser nulo ou vazio")
+        api_object.method = api_object.method.upper()
+        if api_object.method not in ["GET", "POST", "PUT"]:
+            ValueError("Método da API deve ser 'GET', 'POST' ou 'PUT'")
         if api_object.return_type is None or api_object.return_type == "":
             raise ValueError("Tipo de retorno da API não pode ser nulo ou vazio")
+        api_object.return_type = api_object.return_type.lower()
         try:
              return self.repository.save(api_object) 
         except Exception as e:
