@@ -25,7 +25,7 @@ class AlterarFileScript:
         if not self.script_manager.search_in_file_for_result_var(file_content):
             raise ValueError("O arquivo deve conter a variável 'result'.")
         
-        new_path = self.script_manager.save_file(script.nam, file_bytes)
+        new_path = self.script_manager.save_file(script.name, file_bytes)
         if not new_path:
             raise ValueError("Erro ao salvar o arquivo.")
 
