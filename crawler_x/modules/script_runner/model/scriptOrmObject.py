@@ -1,7 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from crawler_x.infrastructure.dataBase.sqlalchemy_session import Base
 
 class ScriptOrmObject(Base):
     __tablename__ = 'scriptTable'

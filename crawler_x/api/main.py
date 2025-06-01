@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from crawler_x.api.routes.router import router
+from crawler_x.api.middleware.logger import LoggingMiddleware
+from crawler_x.infrastructure.dataBase.sqlalchemy_session import SessionLocal
+from .initDataBase import init as dataBaseInit
+
+dataBaseInit()
 
 app = FastAPI(
     title="Projeto X API",
@@ -15,6 +20,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(LoggingMiddleware,SessionLocal)
 
 app.include_router(router, prefix="/v1")
 

@@ -1,9 +1,7 @@
 ## objetos com sqlalchmy são declarados com a classe Base para o uso do orm
 
 from sqlalchemy import Column, Integer, String, JSON
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from crawler_x.infrastructure.dataBase.sqlalchemy_session import Base
 
 class ApiOrmObject(Base):
     __tablename__ = 'apiTable'
