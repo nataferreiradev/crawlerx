@@ -48,6 +48,6 @@ class CrawlerManager:
         return {
             "total_executions": total_executions,
             "total_executados": total_executados,
-            "percentage": self.get_execution_percentage(total_executions, total_executados),
+            "percentage": int(self.get_execution_percentage(total_executions, total_executados)),
             "message": message,
         }

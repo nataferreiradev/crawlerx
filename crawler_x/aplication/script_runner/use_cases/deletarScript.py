@@ -14,6 +14,12 @@ class DeleteScript():
         if not script:
             raise Exception("Script não encontrado")
         script_recover = ScriptManager()
-        if script_recover.delete_file(script.path):
-            self.directory.delete(script.id)
+        self.directory.delete(script.id)
+
+        if script.path:
+            try:
+                script_recover.delete_file(script.path)
+            except Exception as e:
+                return;
+        
         

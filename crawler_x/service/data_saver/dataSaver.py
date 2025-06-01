@@ -2,6 +2,7 @@ import os
 from crawler_x.modules.api_request.model.apiOrmObject import ApiOrmObject
 from requests import Response
 from datetime import datetime
+import json
 
 
 class DataSaver():
@@ -11,13 +12,21 @@ class DataSaver():
         extension = 'json' if resp.headers.get('Content-Type') == 'application/json' else ApiObject.return_type
         self.save(ApiObject.name, resp.content, extension)
     
-    def save(self, name: str, content: str, extension: str):
+    def save(self, name: str, content, extension: str):
         file_path = self.getFilePath(name, extension)
-        with open(file_path, 'wb') as file:  
-            if isinstance(content, str):
-                content = content.encode('utf-8')  
-            file.write(content) 
+
+        if isinstance(content, str) or isinstance(content, bytes):
+            to_write = content
+        else:
+            to_write = json.dumps(content, ensure_ascii=False, indent=2)
+
+        # se for bytes o modo de escrita é diferente
+        mode = 'wb' if isinstance(to_write, bytes) else 'w'
+
+        with open(file_path, mode, encoding='utf-8' if mode == 'w' else None) as file:
+            file.write(to_write)
     
+
     def getDir(self):
         dir_path = os.path.join(self.dirName, datetime.now().strftime('%Y-%m-%d'))
         os.makedirs(dir_path, exist_ok=True) 
