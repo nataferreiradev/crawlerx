@@ -23,7 +23,10 @@ class LoggingMiddleware(BaseHTTPMiddleware):
 
         def save_log():
             with self.db_sessionmaker() as db:
+                if request.method == 'GET':
+                    return;
                 use_case = InsertLog(db)
+
 
                 log = LogOrmObject(
                     method=request.method,

@@ -20,6 +20,7 @@ class Requester():
         else:
             raise ValueError(f"Unsupported HTTP method: {api_object.method}")
 
+        resp.raise_for_status()
         self.data_saver.save_from_response(resp, api_object)
         return resp
 
@@ -29,7 +30,7 @@ class Requester():
         return req.get(url=api_object.url, headers=api_object.headers, params=api_object.params)
 
     def post(self, api_object: ApiOrmObject):
-        return req.post(url=api_object.url, headers=api_object.headers, params=api_object.params)
+        return req.post(url=api_object.url, headers=api_object.headers, params=api_object.params,body = api_object.body)
 
     def put(self, api_object: ApiOrmObject):
-        return req.put(url=api_object.url, headers=api_object.headers, params=api_object.params)
+        return req.put(url=api_object.url, headers=api_object.headers, params=api_object.params,body = api_object.body)

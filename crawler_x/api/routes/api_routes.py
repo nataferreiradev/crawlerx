@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
-from sqlalchemy.orm import Session
 from crawler_x.aplication.api_request.use_cases import (
     ListarApi, ProcurarApi, CadastrarApi, DeletarApi, AtualizarApi
 )
+from sqlalchemy.orm import Session
 from crawler_x.infrastructure.dataBase.sqlalchemy_session import get_db
 from crawler_x.modules.api_request.model import ApiOrmObject, ApiJsonObject
 
