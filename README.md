@@ -95,7 +95,11 @@ This project is licensed under the MIT License.
 
 ## Authors
 
-- [Your Name](https://github.com/nataferreiradev)
+- [Natã Nogueira Ferreira](https://github.com/nataferreiradev)
+- Kauê sobreira
+- Rafael de camargo neves
+- Julia Zuim
+- Diogo
 
 ---
 
