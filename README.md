@@ -1,5 +1,3 @@
-nataferreiradev: crie o readme desse projeto em ingles
-
 GitHub Copilot: # CrawlerX
 
 CrawlerX is an orchestration platform for managing and executing web crawlers and API requests. It provides a RESTful API (built with FastAPI) for registering, updating, deleting, and running scripts and API calls, as well as managing logs and data recovery. The project uses SQLAlchemy for ORM and supports script uploads and execution in a controlled environment.
